@@ -4,6 +4,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Contributors][contributors-shield]][contributors-url]
+[![Stand with Palestine][stand-with-palestine-shield]][stand-with-palestine-url]
 [![Buy Me a Coffee][buy-me-a-coffee-shield]][buy-me-a-coffee-url]
 
 Transform your GitHub or GitLab contribution graph into an interactive Pac-Man game! This JavaScript library offers a unique and engaging way to visualize your coding activity over the past year.
@@ -311,5 +312,7 @@ Inspired by the [snk](https://github.com/Platane/snk) project, which turns your 
 [forks-url]: https://github.com/abozanona/pacman-contribution-graph/network/members
 [stars-shield]: https://img.shields.io/github/stars/abozanona/pacman-contribution-graph.svg?style=for-the-badge
 [stars-url]: https://github.com/abozanona/pacman-contribution-graph/stargazers
+[stand-with-palestine-shield]: https://img.shields.io/badge/🇵🇸%20%20Stand%20With%20Palestine-007A3D?style=for-the-badge&logo=liberapay&logoColor=white&labelColor=007A3D
+[stand-with-palestine-url]: https://www.islamic-relief.org.uk/giving/appeals/palestine
 [buy-me-a-coffee-shield]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-orange?logo=buy-me-a-coffee&style=for-the-badge
 [buy-me-a-coffee-url]: https://www.buymeacoffee.com/abozanona
