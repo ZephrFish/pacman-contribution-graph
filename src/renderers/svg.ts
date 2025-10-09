@@ -50,14 +50,34 @@ const generateAnimatedSVG = (store: StoreType) => {
 		}
 	}
 
-	// Walls
-	for (let x = 0; x < GRID_WIDTH; x++) {
-		for (let y = 0; y < GRID_HEIGHT; y++) {
-			if (WALLS.horizontal[x][y].active) {
-				svg += `<rect id="wh-${x}-${y}" x="${x * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${y * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${CELL_SIZE + GAP_SIZE}" height="${GAP_SIZE}" rx="5" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+	// Horizontal walls
+	for (let y = 0; y < GRID_HEIGHT; y++) {
+		let runStart = null;
+		for (let x = 0; x <= GRID_WIDTH; x++) {
+			let active = x < GRID_WIDTH && WALLS.horizontal[x][y].active;
+			if (active && runStart === null) {
+				runStart = x;
 			}
-			if (WALLS.vertical[x][y].active) {
-				svg += `<rect id="wv-${x}-${y}" x="${x * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${y * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${GAP_SIZE}" height="${CELL_SIZE + GAP_SIZE}" rx="5" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+			if ((!active || x === GRID_WIDTH) && runStart !== null) {
+				let length = x - runStart;
+				svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${y * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${length * (CELL_SIZE + GAP_SIZE)}" height="${GAP_SIZE}" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+				runStart = null;
+			}
+		}
+	}
+
+	// Vertical walls
+	for (let x = 0; x < GRID_WIDTH; x++) {
+		let runStart = null;
+		for (let y = 0; y <= GRID_HEIGHT; y++) {
+			let active = y < GRID_HEIGHT && WALLS.vertical[x][y].active;
+			if (active && runStart === null) {
+				runStart = y;
+			}
+			if ((!active || y === GRID_HEIGHT) && runStart !== null) {
+				let length = y - runStart;
+				svg += `<rect id="wv-${x}-${runStart}" x="${x * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${GAP_SIZE}" height="${length * (CELL_SIZE + GAP_SIZE)}" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+				runStart = null;
 			}
 		}
 	}

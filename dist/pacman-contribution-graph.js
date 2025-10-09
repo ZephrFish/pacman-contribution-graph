@@ -1999,14 +1999,33 @@ const generateAnimatedSVG = (store) => {
 			</rect>`;
         }
     }
-    // Walls
-    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH; x++) {
-        for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT; y++) {
-            if (_core_constants__WEBPACK_IMPORTED_MODULE_0__.WALLS.horizontal[x][y].active) {
-                svg += `<rect id="wh-${x}-${y}" x="${x * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" y="${y * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE + 15}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" rx="5" fill="${_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).wallColor}"></rect>`;
+    // Horizontal walls
+    for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT; y++) {
+        let runStart = null;
+        for (let x = 0; x <= _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH; x++) {
+            let active = x < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH && _core_constants__WEBPACK_IMPORTED_MODULE_0__.WALLS.horizontal[x][y].active;
+            if (active && runStart === null) {
+                runStart = x;
             }
-            if (_core_constants__WEBPACK_IMPORTED_MODULE_0__.WALLS.vertical[x][y].active) {
-                svg += `<rect id="wv-${x}-${y}" x="${x * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" y="${y * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE + 15}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" rx="5" fill="${_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).wallColor}"></rect>`;
+            if ((!active || x === _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH) && runStart !== null) {
+                let length = x - runStart;
+                svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" y="${y * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE + 15}" width="${length * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE)}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" fill="${_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).wallColor}"></rect>`;
+                runStart = null;
+            }
+        }
+    }
+    // Vertical walls
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH; x++) {
+        let runStart = null;
+        for (let y = 0; y <= _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT; y++) {
+            let active = y < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT && _core_constants__WEBPACK_IMPORTED_MODULE_0__.WALLS.vertical[x][y].active;
+            if (active && runStart === null) {
+                runStart = y;
+            }
+            if ((!active || y === _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT) && runStart !== null) {
+                let length = y - runStart;
+                svg += `<rect id="wv-${x}-${runStart}" x="${x * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" y="${runStart * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE + 15}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" height="${length * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE)}" fill="${_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).wallColor}"></rect>`;
+                runStart = null;
             }
         }
     }
