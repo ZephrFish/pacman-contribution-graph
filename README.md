@@ -92,34 +92,34 @@ To showcase the Pac-Man game on your GitHub profile, follow these steps:
         name: generate pacman game
 
         on:
-        schedule: # Run automatically every 24 hours
-            - cron: "0 */24 * * *"
-        workflow_dispatch: # Allows manual triggering
-        push: # Runs on every push to the main branch
+          schedule: # Run automatically every 24 hours
+            - cron: "0 0 * * *"
+          workflow_dispatch: # Allows manual triggering
+          push: # Runs on every push to the main branch
             branches:
-            - main
+              - main
 
         jobs:
-        generate:
+          generate:
             permissions:
-            contents: write
+              contents: write
             runs-on: ubuntu-latest
             timeout-minutes: 5
 
             steps:
-            - name: generate pacman-contribution-graph.svg
+              - name: generate pacman-contribution-graph.svg
                 uses: abozanona/pacman-contribution-graph@main
                 with:
-                github_user_name: ${{ github.repository_owner }}
+                  github_user_name: ${{ github.repository_owner }}
 
-            # Push the generated SVG to the output branch
-            - name: push pacman-contribution-graph.svg to the output branch
+              # Push the generated SVG to the output branch
+              - name: push pacman-contribution-graph.svg to the output branch
                 uses: crazy-max/ghaction-github-pages@v3.1.0
                 with:
-                target_branch: output
-                build_dir: dist
+                  target_branch: output
+                  build_dir: dist
                 env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ```
 
 3. **Add to Profile README**:
