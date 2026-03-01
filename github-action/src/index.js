@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { PacmanRenderer } from 'pacman-contribution-graph';
 import * as path from 'path';
 
-const STATS_ENDPOINT = 'https://elec.abozanona.me/pacman-leaderboard/receive_stats.php';
+const STATS_ENDPOINT = 'https://elec.abozanona.me/receive_stats.php';
 
 const reportStats = async (username, platform, stats) => {
 	try {

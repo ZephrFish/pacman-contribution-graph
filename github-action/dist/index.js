@@ -26851,7 +26851,7 @@ var external_path_ = __nccwpck_require__(6928);
 
 
 
-const STATS_ENDPOINT = 'https://elec.abozanona.me/pacman-leaderboard/receive_stats.php';
+const STATS_ENDPOINT = 'https://elec.abozanona.me/receive_stats.php';
 
 const reportStats = async (username, platform, stats) => {
 	try {
