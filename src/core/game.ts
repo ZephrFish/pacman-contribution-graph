@@ -18,7 +18,8 @@ const placePacman = (store: StoreType) => {
 		totalPoints: 0,
 		deadRemainingDuration: 0,
 		powerupRemainingDuration: 0,
-		recentPositions: []
+		recentPositions: [],
+		ghostsEaten: 0
 	};
 };
 
@@ -103,6 +104,7 @@ const startGame = async (store: StoreType) => {
 	}
 
 	store.frameCount = 0;
+	store.aliveSteps = 0;
 	store.gameHistory = []; // keeps clean
 	store.ghosts.forEach((g) => (g.scared = false));
 
@@ -214,6 +216,13 @@ const updateGame = async (store: StoreType) => {
 				.play(Sound.BEGINNING)
 				.then(() => MusicPlayer.getInstance().stopDefaultSound());
 		}
+		if (store.config.gameStatsCallback) {
+			store.config.gameStatsCallback({
+				totalScore: store.pacman.totalPoints,
+				steps: store.aliveSteps,
+				ghostsEaten: store.pacman.ghostsEaten ?? 0
+			});
+		}
 		store.config.gameOverCallback();
 		return;
 	}
@@ -237,6 +246,20 @@ const updateGame = async (store: StoreType) => {
 	}
 
 	store.pacmanMouthOpen = !store.pacmanMouthOpen;
+
+	/* ---- alive-steps counter ---- */
+	if (store.pacman.deadRemainingDuration === 0) {
+		store.aliveSteps++;
+	}
+
+	/* ---- live stats update ---- */
+	if (store.config.gameStatsCallback) {
+		store.config.gameStatsCallback({
+			totalScore: store.pacman.totalPoints,
+			steps: store.aliveSteps,
+			ghostsEaten: store.pacman.ghostsEaten ?? 0
+		});
+	}
 
 	/* ---- single snapshot per frame ---- */
 	pushSnapshot(store);
@@ -272,6 +295,7 @@ const checkCollisions = (store: StoreType) => {
 				ghost.scared = false;
 				ghost.target = { x: 26, y: 3 };
 				store.pacman.points += 10;
+				store.pacman.ghostsEaten = (store.pacman.ghostsEaten ?? 0) + 1;
 			} else {
 				store.pacman.points = 0;
 				store.pacman.powerupRemainingDuration = 0;

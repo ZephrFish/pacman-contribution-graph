@@ -34,6 +34,46 @@
 			.section {
 				margin-bottom: 3rem;
 			}
+
+			/* ── Leaderboard snapshot ── */
+			.lb-col-score   { color: #856404; }
+			.lb-col-fastest { color: #055160; }
+			.lb-col-ghost   { color: #842029; }
+			.lb-mini-row {
+				display: flex;
+				align-items: center;
+				gap: .5rem;
+				padding: .3rem .4rem;
+				color: #333;
+				font-size: .88rem;
+			}
+			.lb-mini-rank { min-width: 22px; font-weight: 700; font-size: .8rem; color: #6c757d; }
+			.lb-mini-rank-1 { color: #856404; }
+			.lb-mini-rank-2 { color: #6c757d; }
+			.lb-mini-rank-3 { color: #842029; }
+			.lb-mini-avatar {
+				width: 24px; height: 24px;
+				border-radius: 50%;
+				object-fit: cover;
+				border: 1px solid #e1e4e8;
+				flex-shrink: 0;
+			}
+			.lb-mini-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+			.lb-mini-val  { font-size: .78rem; white-space: nowrap; color: #6c757d; }
+			.lb-see-all {
+				display: inline-block;
+				margin-top: 1rem;
+				background: #24292e;
+				color: #fff !important;
+				font-weight: 600;
+				padding: .45rem 1.2rem;
+				border-radius: 20px;
+				text-decoration: none;
+				font-size: .88rem;
+				transition: opacity .2s;
+			}
+			.lb-see-all:hover { opacity: .85; }
+
 			pre {
 				background-color: #f6f8fa;
 				border: 1px solid #e1e4e8;
@@ -60,6 +100,12 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="index.html">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard</a>
+						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="https://github.com/abozanona/pacman-contribution-graph/" target="_blank"
 								><i class="fab fa-github"></i> GitHub</a
@@ -89,6 +135,31 @@
 					This project allows you to visualize your contribution graph as a playable Pac-Man game. Set up your preferences,
 					generate the game, and have fun while showcasing your coding activity.
 				</p>
+			</div>
+
+			<!-- ── Leaderboard Snapshot ── -->
+			<div class="mb-4">
+				<div class="jumbotron">
+					<h2><i class="fas fa-trophy me-2"></i>Leaderboard Snapshot</h2>
+					<p class="lb-sub">Top 3 across all contribution graphs</p>
+					<div class="row g-3" id="lb-snapshot-boards">
+						<div class="col-12 col-md-4">
+							<div class="lb-col-score"><i class="fas fa-star"></i> Highest Score</div>
+							<div id="snap-score">Loading...</div>
+						</div>
+						<div class="col-12 col-md-4">
+							<div class="lb-col-fastest"><i class="fas fa-bolt"></i> Fastest Run</div>
+							<div id="snap-fastest">Loading...</div>
+						</div>
+						<div class="col-12 col-md-4">
+							<div class="lb-col-ghost"><i class="fas fa-ghost"></i> Ghost Hunter</div>
+							<div id="snap-ghost">Loading...</div>
+						</div>
+					</div>
+					<div class="text-center">
+						<a href="leaderboard.html" class="lb-see-all"><i class="fas fa-list-ol me-1"></i>See Full Leaderboard (Top 10)</a>
+					</div>
+				</div>
 			</div>
 
 			<div class="section">
@@ -204,7 +275,9 @@
 					<br />
 					<button id="downloadSvg" class="btn btn-success mt-3" style="display: none">Download SVG</button>
 				</div>
-				<div>Commits count: <span id="points">0</span></div>
+				<div>Score: <span id="points">0</span></div>
+				<div>Steps: <span id="steps">0</span></div>
+				<div>Ghosts eaten: <span id="ghostsEaten">0</span></div>
 			</div>
 
 			<div class="section">
@@ -419,7 +492,7 @@ deploy_to_readme:
 		- if: '$CI_PIPELINE_SOURCE == "schedule"'
 		- if: '$CI_PIPELINE_SOURCE == "push"'</code></pre>
 				</li>
-				<li>Create <code>README.md</code> file in your gitlab repo with the following content. Change `[USERNAME]` with your github username
+				<li>Create <code>README.md</code> file in your gitlab repo with the following content. Change <code>[USERNAME]</code> with your github username
 				<pre><code>&lt;picture>
   &lt;source media="(prefers-color-scheme: dark)" srcset="https://gitlab.com/[USERNAME]/[USERNAME]/-/raw/main/output/pacman-contribution-graph-dark.svg">
   &lt;source media="(prefers-color-scheme: light)" srcset="https://gitlab.com/[USERNAME]/[USERNAME]/-/raw/main/output/pacman-contribution-graph-light.svg">
@@ -586,6 +659,11 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 					pr = new PacmanRenderer({
 						...config,
 						canvas: canvas,
+						gameStatsCallback: (stats) => {
+							points.innerText = stats.totalScore;
+							steps.innerText = stats.steps;
+							ghostsEaten.innerText = stats.ghostsEaten;
+						},
 						gameOverCallback: () => {
 							console.log('Game Over');
 						},
@@ -611,6 +689,11 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 							svgHolder.src = svgUrl;
 							currentSvgBlob = svgUrl;
 						},
+						gameStatsCallback: (stats) => {
+							points.innerText = stats.totalScore;
+							steps.innerText = stats.steps;
+							ghostsEaten.innerText = stats.ghostsEaten;
+						},
 						gameOverCallback: () => {
 							console.log('Game Over');
 						},
@@ -632,6 +715,59 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 					document.body.removeChild(link);
 				}
 			});
+		</script>
+
+		<!-- Leaderboard snapshot -->
+		<script>
+			const LB_API = 'https://elec.abozanona.me/pacman-leaderboard/leaderboard_api.php';
+
+			function snapAvatar(username, platform) {
+				const src = platform === 'github'
+					? `https://github.com/${encodeURIComponent(username)}.png?size=48`
+					: `https://gitlab.com/${encodeURIComponent(username)}.png`;
+				return `<img class="lb-mini-avatar" src="${src}" alt="" onerror="this.style.display='none'">`;
+			}
+
+			function snapRankClass(n) {
+				return n <= 3 ? `lb-mini-rank lb-mini-rank-${n}` : 'lb-mini-rank';
+			}
+
+			function snapProfileURL(username, platform) {
+				return platform === 'github' ? `https://github.com/${username}` : `https://gitlab.com/${username}`;
+			}
+
+			function renderSnap(containerId, entries, valFn) {
+				const el = document.getElementById(containerId);
+				if (!el) return;
+				if (!entries || entries.length === 0) {
+					el.innerHTML = 'No data yet';
+					return;
+				}
+				el.innerHTML = entries.slice(0, 3).map(e => `
+					<a class="lb-mini-row" href="${snapProfileURL(e.username, e.platform)}" target="_blank" rel="noopener">
+						<span class="${snapRankClass(e.rank)}">${e.rank}</span>
+						${snapAvatar(e.username, e.platform)}
+						<span class="lb-mini-name">${e.username}</span>
+						<span class="lb-mini-val">${valFn(e.value)}</span>
+					</a>
+				`).join('');
+			}
+
+			(async () => {
+				try {
+					const res = await fetch(LB_API);
+					if (!res.ok) throw new Error();
+					const data = await res.json();
+					renderSnap('snap-score',   data.top_score,    v => `${v.toLocaleString()} pts`);
+					renderSnap('snap-fastest', data.fastest,      v => `${v.toLocaleString()} steps`);
+					renderSnap('snap-ghost',   data.ghost_hunter, v => `${v} 👻`);
+				} catch {
+					['snap-score','snap-fastest','snap-ghost'].forEach(id => {
+						const el = document.getElementById(id);
+						if (el) el.innerHTML = 'Could not load';
+					});
+				}
+			})();
 		</script>
 	</body>
 </html>

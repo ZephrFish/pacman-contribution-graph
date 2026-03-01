@@ -189,7 +189,8 @@ const placePacman = (store) => {
         totalPoints: 0,
         deadRemainingDuration: 0,
         powerupRemainingDuration: 0,
-        recentPositions: []
+        recentPositions: [],
+        ghostsEaten: 0
     };
 };
 const placeGhosts = (store) => {
@@ -270,6 +271,7 @@ const startGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
         _renderers_canvas__WEBPACK_IMPORTED_MODULE_3__.Canvas.listenToSoundController(store);
     }
     store.frameCount = 0;
+    store.aliveSteps = 0;
     store.gameHistory = []; // keeps clean
     store.ghosts.forEach((g) => (g.scared = false));
     store.grid = _utils_utils__WEBPACK_IMPORTED_MODULE_5__.Utils.createGridFromData(store);
@@ -313,7 +315,7 @@ const determineGhostName = (index) => {
 };
 /* ---------- update per frame ---------- */
 const updateGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _a, _b, _c;
     store.frameCount++;
     /* ---- FRAME-SKIP restored ---- */
     if (store.frameCount % store.config.gameSpeed !== 0) {
@@ -369,12 +371,19 @@ const updateGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
                 .play(_music_player__WEBPACK_IMPORTED_MODULE_2__.Sound.BEGINNING)
                 .then(() => _music_player__WEBPACK_IMPORTED_MODULE_2__.MusicPlayer.getInstance().stopDefaultSound());
         }
+        if (store.config.gameStatsCallback) {
+            store.config.gameStatsCallback({
+                totalScore: store.pacman.totalPoints,
+                steps: store.aliveSteps,
+                ghostsEaten: (_a = store.pacman.ghostsEaten) !== null && _a !== void 0 ? _a : 0
+            });
+        }
         store.config.gameOverCallback();
         return;
     }
     /* -------- movements -------- */
     _movement_pacman_movement__WEBPACK_IMPORTED_MODULE_1__.PacmanMovement.movePacman(store);
-    const cell = (_a = store.grid[store.pacman.x]) === null || _a === void 0 ? void 0 : _a[store.pacman.y];
+    const cell = (_b = store.grid[store.pacman.x]) === null || _b === void 0 ? void 0 : _b[store.pacman.y];
     if (cell && cell.level === 'FOURTH_QUARTILE' && store.pacman.powerupRemainingDuration === 0) {
         store.pacman.powerupRemainingDuration = 30;
         store.ghosts.forEach((g) => {
@@ -388,6 +397,18 @@ const updateGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
         checkCollisions(store);
     }
     store.pacmanMouthOpen = !store.pacmanMouthOpen;
+    /* ---- alive-steps counter ---- */
+    if (store.pacman.deadRemainingDuration === 0) {
+        store.aliveSteps++;
+    }
+    /* ---- live stats update ---- */
+    if (store.config.gameStatsCallback) {
+        store.config.gameStatsCallback({
+            totalScore: store.pacman.totalPoints,
+            steps: store.aliveSteps,
+            ghostsEaten: (_c = store.pacman.ghostsEaten) !== null && _c !== void 0 ? _c : 0
+        });
+    }
     /* ---- single snapshot per frame ---- */
     pushSnapshot(store);
     if (store.config.outputFormat == 'canvas')
@@ -412,6 +433,7 @@ const checkCollisions = (store) => {
     if (store.pacman.deadRemainingDuration)
         return;
     store.ghosts.forEach((ghost) => {
+        var _a;
         // If the ghost is eyes, there should be no collision
         if (ghost.name === 'eyes')
             return;
@@ -422,6 +444,7 @@ const checkCollisions = (store) => {
                 ghost.scared = false;
                 ghost.target = { x: 26, y: 3 };
                 store.pacman.points += 10;
+                store.pacman.ghostsEaten = ((_a = store.pacman.ghostsEaten) !== null && _a !== void 0 ? _a : 0) + 1;
             }
             else {
                 store.pacman.points = 0;
@@ -461,6 +484,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const Store = {
     frameCount: 0,
+    aliveSteps: 0,
     contributions: [],
     pacman: {
         x: 0,
@@ -470,7 +494,8 @@ const Store = {
         totalPoints: 0,
         deadRemainingDuration: 0,
         powerupRemainingDuration: 0,
-        recentPositions: []
+        recentPositions: [],
+        ghostsEaten: 0
     },
     ghosts: [],
     grid: [],

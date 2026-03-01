@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Leaderboard - Pac-Man Contributions Game</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+		<style>
+			body {
+				font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+				line-height: 1.6;
+				color: #333;
+				padding-top: 60px;
+			}
+			.navbar {
+				background-color: #24292e;
+			}
+			.navbar-brand,
+			.nav-link {
+				color: #ffffff !important;
+			}
+			.jumbotron {
+				background-color: #f6f8fa;
+				padding: 2rem;
+				margin-bottom: 2rem;
+			}
+			.section {
+				margin-bottom: 3rem;
+			}
+			/* ── Category icons ── */
+			.category-icon {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 36px;
+				height: 36px;
+				border-radius: 50%;
+				font-size: 0.95rem;
+				margin-right: 0.5rem;
+				flex-shrink: 0;
+			}
+			.icon-score {
+				background: #fff3cd;
+				color: #856404;
+			}
+			.icon-fastest {
+				background: #cff4fc;
+				color: #055160;
+			}
+			.icon-ghost {
+				background: #f8d7da;
+				color: #842029;
+			}
+			.category-label {
+				font-size: 1.1rem;
+				font-weight: 700;
+				margin: 0;
+			}
+			.category-desc {
+				font-size: 0.82rem;
+				color: #6c757d;
+				margin: 0;
+			}
+			/* ── Leaderboard card ── */
+			.lb-card {
+				background-color: #f6f8fa;
+				border: 1px solid #e1e4e8;
+				border-radius: 6px;
+				padding: 1.25rem;
+				height: 100%;
+			}
+			/* ── Player rows ── */
+			.lb-row {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				padding: 0.55rem 0.4rem;
+				border-bottom: 1px solid #e1e4e8;
+				text-decoration: none;
+				color: #333;
+				transition: background 0.15s;
+				border-radius: 4px;
+			}
+			.lb-row:last-child {
+				border-bottom: none;
+			}
+			.lb-row:hover {
+				background: #eaf0f6;
+				color: #0969da;
+			}
+			.rank {
+				min-width: 28px;
+				text-align: center;
+				font-weight: 700;
+				font-size: 0.9rem;
+				color: #6c757d;
+			}
+			.rank-1 {
+				color: #bf8700;
+			}
+			.rank-2 {
+				color: #6e7781;
+			}
+			.rank-3 {
+				color: #953800;
+			}
+			.rank-n {
+				color: #6c757d;
+			}
+			.lb-avatar {
+				width: 32px;
+				height: 32px;
+				border-radius: 50%;
+				object-fit: cover;
+				border: 1px solid #e1e4e8;
+				flex-shrink: 0;
+			}
+			.lb-avatar-placeholder {
+				width: 32px;
+				height: 32px;
+				border-radius: 50%;
+				background: #e1e4e8;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.8rem;
+				color: #6c757d;
+				flex-shrink: 0;
+			}
+			.lb-info {
+				flex: 1;
+				min-width: 0;
+			}
+			.lb-username {
+				font-weight: 600;
+				font-size: 0.9rem;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.lb-date {
+				font-size: 0.75rem;
+				color: #6c757d;
+			}
+			.lb-value {
+				font-size: 0.82rem;
+				font-weight: 600;
+				white-space: nowrap;
+				padding: 0.15rem 0.55rem;
+				border-radius: 20px;
+				flex-shrink: 0;
+			}
+			.val-score {
+				background: #fff3cd;
+				color: #856404;
+			}
+			.val-fastest {
+				background: #cff4fc;
+				color: #055160;
+			}
+			.val-ghost {
+				background: #f8d7da;
+				color: #842029;
+			}
+			.lb-state {
+				text-align: center;
+				padding: 1.5rem 0;
+				color: #6c757d;
+				font-size: 0.9rem;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg fixed-top">
+			<div class="container">
+				<a class="navbar-brand" href="https://abozanona.github.io/pacman-contribution-graph/">Pac-Man Contributions</a>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="collapse"
+					data-bs-target="#navbarNav"
+					aria-controls="navbarNav"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="index.html">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://github.com/abozanona/pacman-contribution-graph/" target="_blank"
+								><i class="fab fa-github"></i> GitHub</a
+							>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://buymeacoffee.com/abozanona/" target="_blank"
+								><i class="fas fa-coffee"></i> Buy Me a Coffee</a
+							>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="https://abozanona.me/pacman-contribution-graph/" target="_blank"
+								><i class="fas fa-blog"></i> Blog</a
+							>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="jumbotron">
+				<h1 class="display-4"><i class="fas fa-trophy me-2"></i>Leaderboard</h1>
+				<p class="lead">Top Pac-Man players across all contribution graphs.</p>
+				<hr class="my-4" />
+				<p>
+					Rankings are based on stats submitted by the GitHub Action each time a contribution graph is regenerated. Only runs from
+					the last 3 days are counted.
+				</p>
+			</div>
+
+			<div class="section">
+				<div class="row g-4">
+					<!-- Highest Score -->
+					<div class="col-12 col-lg-4">
+						<div class="lb-card">
+							<div class="d-flex align-items-center mb-3">
+								<span class="category-icon icon-score"><i class="fas fa-star"></i></span>
+								<div>
+									<p class="category-label">Highest Score</p>
+									<p class="category-desc">Most contribution dots devoured</p>
+								</div>
+							</div>
+							<div id="list-score">
+								<div class="lb-state"><i class="fas fa-spinner fa-spin me-1"></i>Loading…</div>
+							</div>
+						</div>
+					</div>
+					<!-- Fastest Run -->
+					<div class="col-12 col-lg-4">
+						<div class="lb-card">
+							<div class="d-flex align-items-center mb-3">
+								<span class="category-icon icon-fastest"><i class="fas fa-bolt"></i></span>
+								<div>
+									<p class="category-label">Fastest Run</p>
+									<p class="category-desc">Fewest steps to clear the board</p>
+								</div>
+							</div>
+							<div id="list-fastest">
+								<div class="lb-state"><i class="fas fa-spinner fa-spin me-1"></i>Loading…</div>
+							</div>
+						</div>
+					</div>
+					<!-- Ghost Hunter -->
+					<div class="col-12 col-lg-4">
+						<div class="lb-card">
+							<div class="d-flex align-items-center mb-3">
+								<span class="category-icon icon-ghost"><i class="fas fa-ghost"></i></span>
+								<div>
+									<p class="category-label">Ghost Hunter</p>
+									<p class="category-desc">Most ghosts eaten in one run</p>
+								</div>
+							</div>
+							<div id="list-ghost">
+								<div class="lb-state"><i class="fas fa-spinner fa-spin me-1"></i>Loading…</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<p class="text-muted small" id="last-updated"></p>
+		</div>
+
+		<footer class="bg-light py-3 mt-5 invisible">
+			<div class="container text-center">
+				<p class="mb-1 text-muted small">
+					Stats are submitted automatically by the
+					<a href="https://github.com/abozanona/pacman-contribution-graph" target="_blank">GitHub Action</a>
+					each time your contribution graph is regenerated.
+				</p>
+				<p class="mb-0 text-muted small"><a href="index.html">← Back to game</a></p>
+			</div>
+		</footer>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+		<script>
+			const API_URL = 'https://elec.abozanona.me/pacman-leaderboard/leaderboard_api.php';
+
+			// ── Rank medal ──
+			function rankHTML(n) {
+				const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
+				if (medals[n]) return `<span class="rank rank-${n}">${medals[n]}</span>`;
+				return `<span class="rank rank-n">${n}</span>`;
+			}
+
+			// ── Avatar ──
+			function avatarHTML(username, platform) {
+				if (platform === 'github') {
+					return `<img class="lb-avatar"
+					             src="https://github.com/${encodeURIComponent(username)}.png?size=48"
+					             alt="${username}"
+					             onerror="this.outerHTML=fallbackAvatar('${username[0].toUpperCase()}')">`;
+				}
+				if (platform === 'gitlab') {
+					return `<img class="lb-avatar"
+					             src="https://gitlab.com/${encodeURIComponent(username)}.png"
+					             alt="${username}"
+					             onerror="this.outerHTML=fallbackAvatar('${username[0].toUpperCase()}')">`;
+				}
+				return fallbackAvatar(username[0]?.toUpperCase() ?? '?');
+			}
+			function fallbackAvatar(letter) {
+				return `<div class="lb-avatar-placeholder">${letter}</div>`;
+			}
+
+			// ── Profile URL ──
+			function profileURL(username, platform) {
+				if (platform === 'github') return `https://github.com/${username}`;
+				if (platform === 'gitlab') return `https://gitlab.com/${username}`;
+				return '#';
+			}
+
+			// ── Value formatter ──
+			function fmtValue(v, type) {
+				if (type === 'fastest') return `${v.toLocaleString()} steps`;
+				if (type === 'score') return `${v.toLocaleString()} pts`;
+				if (type === 'ghost') return `${v} 👻`;
+				return v;
+			}
+
+			// ── Render one category list ──
+			function renderList(containerId, entries, type) {
+				const el = document.getElementById(containerId);
+				if (!entries || entries.length === 0) {
+					el.innerHTML = `<div class="lb-state"><i class="fas fa-inbox fa-2x mb-2 d-block"></i>No data yet.<br><small>Run the GitHub Action to appear here!</small></div>`;
+					return;
+				}
+				const valClass = type === 'score' ? 'val-score' : type === 'fastest' ? 'val-fastest' : 'val-ghost';
+				el.innerHTML = entries
+					.map(
+						(entry) => `
+					<a class="lb-row" href="${profileURL(entry.username, entry.platform)}" target="_blank" rel="noopener">
+						${rankHTML(entry.rank)}
+						${avatarHTML(entry.username, entry.platform)}
+						<div class="lb-info">
+							<div class="lb-username">${escapeHtml(entry.username)}</div>
+							<div class="lb-date"><i class="fab fa-${entry.platform} me-1"></i>${entry.date}</div>
+						</div>
+						<div class="lb-value ${valClass}">${fmtValue(entry.value, type)}</div>
+					</a>
+				`
+					)
+					.join('');
+			}
+
+			function escapeHtml(str) {
+				return str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+			}
+
+			// ── Fetch & render ──
+			async function loadLeaderboard() {
+				try {
+					const res = await fetch(API_URL);
+					if (!res.ok) throw new Error(`HTTP ${res.status}`);
+					const data = await res.json();
+
+					renderList('list-score', data.top_score, 'score');
+					renderList('list-fastest', data.fastest, 'fastest');
+					renderList('list-ghost', data.ghost_hunter, 'ghost');
+
+					if (data.generated_at) {
+						const d = new Date(data.generated_at);
+						document.getElementById('last-updated').textContent = 'Last updated: ' + d.toLocaleString();
+					}
+				} catch (err) {
+					console.error(err);
+					['list-score', 'list-fastest', 'list-ghost'].forEach((id) => {
+						document.getElementById(id).innerHTML =
+							`<div class="lb-state text-danger"><i class="fas fa-exclamation-triangle me-1"></i>Could not load data.</div>`;
+					});
+				}
+			}
+
+			loadLeaderboard();
+		</script>
+	</body>
+</html>
