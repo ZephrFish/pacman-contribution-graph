@@ -2,6 +2,7 @@ import { type Config, type StoreType } from '../types';
 
 export const Store: StoreType = {
 	frameCount: 0,
+	aliveSteps: 0,
 	contributions: [],
 	pacman: {
 		x: 0,
@@ -11,7 +12,8 @@ export const Store: StoreType = {
 		totalPoints: 0,
 		deadRemainingDuration: 0,
 		powerupRemainingDuration: 0,
-		recentPositions: []
+		recentPositions: [],
+		ghostsEaten: 0
 	},
 	ghosts: [],
 	grid: [],

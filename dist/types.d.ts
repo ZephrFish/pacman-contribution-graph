@@ -15,6 +15,11 @@ export declare enum PlayerStyle {
     AGGRESSIVE = "aggressive",
     OPPORTUNISTIC = "opportunistic"
 }
+export interface GameStats {
+    totalScore: number;
+    steps: number;
+    ghostsEaten: number;
+}
 export interface Pacman {
     x: number;
     y: number;
@@ -25,6 +30,7 @@ export interface Pacman {
     powerupRemainingDuration: number;
     recentPositions: string[];
     target?: Point2d;
+    ghostsEaten: number;
 }
 export type GhostName = 'blinky' | 'clyde' | 'inky' | 'pinky' | 'eyes';
 export interface Ghost {
@@ -47,6 +53,7 @@ export interface GridCell {
 }
 export interface StoreType {
     frameCount: number;
+    aliveSteps: number;
     contributions: Contribution[];
     pacman: Pacman;
     ghosts: Ghost[];
@@ -73,6 +80,7 @@ export interface Config {
     gameSpeed: number;
     enableSounds: boolean;
     pointsIncreasedCallback: (pointsSum: number) => void;
+    gameStatsCallback?: (stats: GameStats) => void;
     githubSettings?: {
         accessToken: string;
     };

@@ -20,6 +20,12 @@ export enum PlayerStyle {
 }
 
 /* ───────────────────────── Pac-Man & Ghosts ────────────────────── */
+export interface GameStats {
+	totalScore: number; // total dots eaten
+	steps: number; // total count of pacman moves
+	ghostsEaten: number; // how many ghosts were eaten
+}
+
 export interface Pacman {
 	x: number;
 	y: number;
@@ -30,6 +36,7 @@ export interface Pacman {
 	powerupRemainingDuration: number;
 	recentPositions: string[];
 	target?: Point2d;
+	ghostsEaten: number;
 }
 
 export type GhostName = 'blinky' | 'clyde' | 'inky' | 'pinky' | 'eyes';
@@ -57,6 +64,7 @@ export interface GridCell {
 
 export interface StoreType {
 	frameCount: number;
+	aliveSteps: number;
 	contributions: Contribution[];
 	pacman: Pacman;
 	ghosts: Ghost[];
@@ -85,6 +93,7 @@ export interface Config {
 	gameSpeed: number;
 	enableSounds: boolean;
 	pointsIncreasedCallback: (pointsSum: number) => void;
+	gameStatsCallback?: (stats: GameStats) => void;
 	githubSettings?: {
 		accessToken: string; // required for GraphQL
 	};
