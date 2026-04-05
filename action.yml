@@ -3,7 +3,7 @@ description: 'Generates a Pacman game from a github user contributions grid. Out
 author: 'abozanona'
 
 runs:
-    using: node20
+    using: node24
     main: github-action/dist/index.js
 
 inputs:
