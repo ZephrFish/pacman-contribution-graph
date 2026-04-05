@@ -306,6 +306,7 @@ const checkAndEatPoint = (store: StoreType) => {
 		cell.level = 'NONE';
 		cell.color = theme.intensityColors[0];
 		cell.commitsCount = 0;
+		store.remainingDots--;
 	}
 };
 
