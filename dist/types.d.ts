@@ -67,6 +67,7 @@ export interface StoreType {
         grid: GridCell[][];
     }[];
     config: Config;
+    remainingDots: number;
     useGithubThemeColor: boolean;
 }
 export interface Config {
