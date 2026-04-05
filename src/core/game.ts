@@ -7,6 +7,8 @@ import { GhostName, StoreType } from '../types';
 import { Utils } from '../utils/utils';
 import { DELTA_TIME, PACMAN_DEATH_DURATION } from './constants';
 
+const DEFAULT_MAX_HISTORY_SIZE = 5000;
+
 /* ---------- positioning helpers ---------- */
 
 const placePacman = (store: StoreType) => {
@@ -96,6 +98,16 @@ const stopGame = async (store: StoreType) => {
 	clearInterval(store.gameInterval as number);
 };
 
+const countRemainingDots = (store: StoreType): number => {
+	let count = 0;
+	for (const row of store.grid) {
+		for (const cell of row) {
+			if (cell.commitsCount > 0) count++;
+		}
+	}
+	return count;
+};
+
 const startGame = async (store: StoreType) => {
 	if (store.config.outputFormat == 'canvas') {
 		store.config.canvas = store.config.canvas;
@@ -109,10 +121,9 @@ const startGame = async (store: StoreType) => {
 	store.ghosts.forEach((g) => (g.scared = false));
 
 	store.grid = Utils.createGridFromData(store);
+	store.remainingDots = countRemainingDots(store);
 
-	const remainingCells = () => store.grid.some((row) => row.some((cell) => cell.commitsCount > 0));
-
-	if (remainingCells()) {
+	if (store.remainingDots > 0) {
 		placePacman(store);
 		placeGhosts(store);
 	}
@@ -129,7 +140,7 @@ const startGame = async (store: StoreType) => {
 	}
 
 	if (store.config.outputFormat === 'svg') {
-		while (remainingCells()) {
+		while (store.remainingDots > 0) {
 			await updateGame(store);
 		}
 		// snapshot final
@@ -204,8 +215,7 @@ const updateGame = async (store: StoreType) => {
 	});
 
 	/* -------- end of game -------- */
-	const remaining = store.grid.some((row) => row.some((c) => c.commitsCount > 0));
-	if (!remaining) {
+	if (store.remainingDots <= 0) {
 		if (store.config.outputFormat === 'svg') {
 			const svg = SVG.generateAnimatedSVG(store);
 			store.config.svgCallback(svg);
@@ -272,6 +282,10 @@ const updateGame = async (store: StoreType) => {
 
 /* ---------- snapshot helper ---------- */
 const pushSnapshot = (store: StoreType) => {
+	const maxSize = store.config.maxHistorySize ?? DEFAULT_MAX_HISTORY_SIZE;
+	if (store.gameHistory.length >= maxSize) {
+		store.gameHistory.shift();
+	}
 	store.gameHistory.push({
 		pacman: { ...store.pacman },
 		ghosts: store.ghosts.map((g) => ({ ...g })),
