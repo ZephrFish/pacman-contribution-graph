@@ -72,11 +72,7 @@ export interface StoreType {
 	monthLabels: string[];
 	pacmanMouthOpen: boolean;
 	gameInterval: number;
-	gameHistory: {
-		pacman: Pacman;
-		ghosts: Ghost[];
-		grid: GridCell[][];
-	}[];
+	gameHistory: FrameSnapshot[];
 	config: Config;
 	remainingDots: number;
 	useGithubThemeColor: boolean;
@@ -117,4 +113,23 @@ export interface GameTheme {
 export interface AnimationData {
 	keyTimes: string;
 	values: string;
+}
+
+/* ───────────────────────── Slim per-frame snapshot ─────────────────── */
+export interface FrameSnapshot {
+	pacman: {
+		x: number;
+		y: number;
+		direction: 'right' | 'left' | 'up' | 'down';
+		deadRemainingDuration: number;
+		powerupRemainingDuration: number;
+	};
+	ghosts: {
+		x: number;
+		y: number;
+		name: GhostName;
+		direction: 'right' | 'left' | 'up' | 'down';
+		scared: boolean;
+	}[];
+	gridColors: string[][];
 }

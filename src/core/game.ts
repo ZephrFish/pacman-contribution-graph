@@ -7,7 +7,7 @@ import { GhostName, StoreType } from '../types';
 import { Utils } from '../utils/utils';
 import { DELTA_TIME, PACMAN_DEATH_DURATION } from './constants';
 
-const DEFAULT_MAX_HISTORY_SIZE = 5000;
+const DEFAULT_MAX_HISTORY_SIZE = 2000;
 
 /* ---------- positioning helpers ---------- */
 
@@ -287,9 +287,21 @@ const pushSnapshot = (store: StoreType) => {
 		store.gameHistory.shift();
 	}
 	store.gameHistory.push({
-		pacman: { ...store.pacman },
-		ghosts: store.ghosts.map((g) => ({ ...g })),
-		grid: store.grid.map((row) => row.map((col) => ({ ...col })))
+		pacman: {
+			x: store.pacman.x,
+			y: store.pacman.y,
+			direction: store.pacman.direction,
+			deadRemainingDuration: store.pacman.deadRemainingDuration,
+			powerupRemainingDuration: store.pacman.powerupRemainingDuration
+		},
+		ghosts: store.ghosts.map((g) => ({
+			x: g.x,
+			y: g.y,
+			name: g.name,
+			direction: g.direction,
+			scared: g.scared
+		})),
+		gridColors: store.grid.map((row) => row.map((col) => col.color))
 	});
 };
 

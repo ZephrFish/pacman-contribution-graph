@@ -1,7 +1,6 @@
 import { PACMAN_COLOR, PACMAN_COLOR_DEAD, PACMAN_COLOR_POWERUP } from '../core/constants';
-import { Pacman } from '../types';
 
-const generatePacManColors = (pacman: Pacman): string => {
+const generatePacManColors = (pacman: { deadRemainingDuration: number; powerupRemainingDuration: number }): string => {
 	if (pacman.deadRemainingDuration) {
 		return PACMAN_COLOR_DEAD;
 	} else if (pacman.powerupRemainingDuration) {

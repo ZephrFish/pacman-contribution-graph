@@ -293,7 +293,7 @@ const generatePacManRotations = (store: StoreType): string[] => {
 };
 
 const generateCellColorValues = (store: StoreType, x: number, y: number): string[] => {
-	return store.gameHistory.map((state) => state.grid[x][y].color);
+	return store.gameHistory.map((state) => state.gridColors[x][y]);
 };
 
 const generateGhostPositions = (store: StoreType, ghostIndex: number): string[] => {
